@@ -91,7 +91,7 @@ battery:subscribe("mouse.clicked", function(env)
 end)
 
 sbar.add("bracket", "widgets.battery.bracket", { battery.name }, {
-  background = { color = colors.transparent, border_width = 0 }
+  background = { color = colors.bg1 }
 })
 
 sbar.add("item", "widgets.battery.padding", {

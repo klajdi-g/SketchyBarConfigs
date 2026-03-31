@@ -66,7 +66,7 @@ local wifi_bracket = sbar.add("bracket", "widgets.wifi.bracket", {
   wifi_up.name,
   wifi_down.name
 }, {
-  background = { color = colors.transparent, border_width = 0 },
+  background = { color = colors.bg1 },
   popup = { align = "center", height = 30 }
 })
 
@@ -90,7 +90,7 @@ local ssid = sbar.add("item", {
   },
   background = {
     height = 2,
-    color = colors.transparent,
+    color = colors.grey,
     y_offset = -15
   }
 })
