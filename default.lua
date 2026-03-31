@@ -25,11 +25,11 @@ sbar.default({
     padding_right = settings.paddings,
   },
   background = {
-    height = 0,
-    corner_radius = 0,
+    height = 28,
+    corner_radius = 8,
     border_width = 0,
     color = colors.transparent,
-    drawing = false,
+    drawing = true,
   },
   popup = {
     background = {

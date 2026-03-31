@@ -26,25 +26,25 @@ for i = 1, 10, 1 do
     padding_right = 1,
     padding_left = 1,
     background = {
-      color = colors.bg1,
-      border_width = 1,
+      color = colors.transparent,
+      border_width = 0,
       height = 26,
-      border_color = colors.black,
+      border_color = colors.transparent,
     },
     popup = { background = { border_width = 5, border_color = colors.black } }
   })
 
   spaces[i] = space
 
-  -- Single item bracket for space items to achieve double border on highlight
-  local space_bracket = sbar.add("bracket", { space.name }, {
-    background = {
-      color = colors.transparent,
-      border_color = colors.bg2,
-      height = 28,
-      border_width = 2
-    }
-  })
+   -- Single item bracket for space items to achieve double border on highlight
+   local space_bracket = sbar.add("bracket", { space.name }, {
+     background = {
+       color = colors.transparent,
+       border_color = colors.transparent,
+       height = 28,
+       border_width = 0
+     }
+   })
 
   -- Padding space
   sbar.add("space", "space.padding." .. i, {
