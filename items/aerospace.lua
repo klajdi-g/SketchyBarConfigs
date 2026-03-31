@@ -16,7 +16,7 @@ for i = 1, 3 do
     icon = {
       string = "",
       width = "dynamic",
-      font = "sketchybar-app-font:Regular:14.0",
+      font = "sketchybar-app-font:Regular:11.0",
     },
     padding_left = 6,
     padding_right = 6,
@@ -29,6 +29,7 @@ for i = 1, 3 do
       border_color = colors.grey,
       border_width = 2,
       height = 28,
+      corner_radius = 8,
     }
   })
   

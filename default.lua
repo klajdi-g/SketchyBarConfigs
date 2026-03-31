@@ -26,7 +26,7 @@ sbar.default({
   },
   background = {
     height = 28,
-    corner_radius = 8,
+    corner_radius = 12,
     border_width = 0,
     color = colors.transparent,
     drawing = true,
@@ -34,7 +34,7 @@ sbar.default({
   popup = {
     background = {
       border_width = 1,
-      corner_radius = 8,
+      corner_radius = 12,
       border_color = colors.muted,
       color = colors.popup.bg,
       shadow = { drawing = true, color = colors.base },
