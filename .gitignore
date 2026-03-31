@@ -1,0 +1,10 @@
+# Lua cache
+*.luac
+
+# OS files
+.DS_Store
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
