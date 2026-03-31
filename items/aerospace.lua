@@ -7,13 +7,15 @@ local workspaces = {}
 for i = 1, 3 do
   local workspace = sbar.add("item", "aerospace.workspace." .. i, {
     label = {
-      width = 0,
+      string = i,
+      width = "dynamic",
     },
     icon = {
-      width = 0,
+      string = "",
+      width = "dynamic",
     },
-    padding_left = 8,
-    padding_right = 8,
+    padding_left = 4,
+    padding_right = 4,
   })
   table.insert(workspaces, workspace)
 end
@@ -36,35 +38,16 @@ sbar.add("item", "aerospace.padding", {
 local current_workspace = 1
 local all_workspaces = {}
 
--- Helper to get app icons for a workspace
-local function get_workspace_apps(workspace_id)
-  sbar.exec("aerospace list-windows --workspace " .. workspace_id .. " --format '%{app-name}'", function(result)
-    if result and result ~= "" then
-      local apps = ""
-      local seen = {}
-      for app in string.gmatch(result, '[^\r\n]+') do
-        if not seen[app] then
-          local icon = app_icons[app] or app_icons["Default"]
-          apps = apps .. icon
-          seen[app] = true
-        end
-      end
-      return apps
-    end
-    return ""
-  end)
-end
-
 -- Update workspace display
 local function update_workspaces()
-  sbar.exec("aerospace list-workspaces", function(result)
+  sbar.exec("aerospace list-workspaces --all", function(all_result)
     all_workspaces = {}
-    for ws in string.gmatch(result, '[^\r\n]+') do
+    for ws in string.gmatch(all_result, '%d+') do
       table.insert(all_workspaces, tonumber(ws))
     end
     
     sbar.exec("aerospace list-workspaces --focused", function(focused)
-      current_workspace = tonumber(focused:gsub("\n", ""))
+      current_workspace = tonumber(focused:match('%d+') or 1)
       
       -- Find the index of current workspace
       local current_index = 1
@@ -75,29 +58,39 @@ local function update_workspaces()
         end
       end
       
-      -- Get 3 workspaces: previous, current, next (or wrap around)
+      -- Get 3 workspaces: previous, current, next
       local display_workspaces = {}
-      local start_index = current_index - 1
-      if start_index < 1 then start_index = #all_workspaces end
       
-      for i = 0, 2 do
-        local idx = ((start_index + i - 1) % #all_workspaces) + 1
-        table.insert(display_workspaces, all_workspaces[idx])
-      end
+      -- Prev
+      local prev_idx = current_index - 1
+      if prev_idx < 1 then prev_idx = #all_workspaces end
+      table.insert(display_workspaces, all_workspaces[prev_idx])
+      
+      -- Current
+      table.insert(display_workspaces, all_workspaces[current_index])
+      
+      -- Next
+      local next_idx = current_index + 1
+      if next_idx > #all_workspaces then next_idx = 1 end
+      table.insert(display_workspaces, all_workspaces[next_idx])
       
       -- Update each workspace display
-      for i, ws_num in ipairs(display_workspaces) do
+      for i = 1, 3 do
+        local ws_num = display_workspaces[i]
         local is_current = ws_num == current_workspace
         
-        sbar.exec("aerospace list-windows --workspace " .. ws_num .. " --format '%{app-name}'", function(apps_result)
+        sbar.exec("aerospace list-windows --workspace " .. ws_num .. " --format '%{app-name}' 2>/dev/null || true", function(apps_result)
           local apps_string = ""
+          
           if apps_result and apps_result ~= "" then
             local seen = {}
+            local count = 0
             for app in string.gmatch(apps_result, '[^\r\n]+') do
-              if not seen[app] then
-                local icon = app_icons[app] or app_icons["Default"]
+              if app ~= "" and not seen[app] and count < 3 then
+                local icon = app_icons[app] or app_icons["Default"] or "•"
                 apps_string = apps_string .. icon
                 seen[app] = true
+                count = count + 1
               end
             end
           end
@@ -134,6 +127,14 @@ sbar.add("item", "aerospace.monitor", {
   updates = true,
 }):subscribe("aerospace_workspace_change", update_workspaces)
 
--- Initial update
-update_workspaces()
+-- Also monitor when apps switch
+sbar.add("item", "aerospace.monitor2", {
+  drawing = false,
+  updates = true,
+}):subscribe("front_app_switched", update_workspaces)
+
+-- Initial update with a small delay
+sbar.delay(0.1, update_workspaces)
+
+
 
