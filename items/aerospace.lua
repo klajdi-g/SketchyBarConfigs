@@ -102,10 +102,10 @@ local function update_workspaces()
           background = {
             shadow = {
               drawing = is_current,
-              color = colors.iris,
-              angle = 45,
-              distance = 2,
-              blur = 5,
+              color = colors.with_alpha(colors.iris, 0.6),
+              angle = 0,
+              distance = 0,
+              blur = 10,
             }
           }
         })
