@@ -1,8 +1,11 @@
-require("items.apple")
+-- Only show Aerospace workspaces on the left
 require("items.aerospace")
-require("items.menus")
-require("items.spaces")
-require("items.front_app")
+
+-- Right-side widgets
+-- require("items.apple")
+-- require("items.menus")
+-- require("items.spaces")
+-- require("items.front_app")
 require("items.calendar")
 require("items.widgets")
 require("items.media")

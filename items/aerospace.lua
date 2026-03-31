@@ -83,6 +83,9 @@ local function update_workspaces()
       if next_idx > #all_workspaces then next_idx = 1 end
       table.insert(display_workspaces, all_workspaces[next_idx])
       
+      -- Track all apps shown globally to deduplicate across all 3 workspaces
+      local global_seen = {}
+      
       -- Update each workspace display
       for i = 1, 3 do
         local ws_num = display_workspaces[i]
@@ -95,10 +98,11 @@ local function update_workspaces()
             local seen = {}
             local count = 0
             for app in string.gmatch(apps_result, '[^\r\n]+') do
-              if app ~= "" and not seen[app] and count < 4 then
+              if app ~= "" and not seen[app] and not global_seen[app] and count < 4 then
                 local icon = app_icons[app] or app_icons["Default"] or "•"
                 apps_string = apps_string .. icon
                 seen[app] = true
+                global_seen[app] = true
                 count = count + 1
               end
             end
@@ -147,6 +151,7 @@ sbar.add("item", "aerospace.monitor2", {
 
 -- Initial update with a small delay
 sbar.delay(0.1, update_workspaces)
+
 
 
 
