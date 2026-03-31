@@ -10,6 +10,12 @@ local front_app = sbar.add("item", "front_app", {
       size = 12.0,
     },
   },
+  background = {
+    color = colors.bg1,
+    border_color = colors.grey,
+    border_width = 2,
+    height = 28,
+  },
   updates = true,
 })
 
