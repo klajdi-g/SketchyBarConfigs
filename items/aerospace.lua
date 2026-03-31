@@ -13,6 +13,7 @@ for i = 1, 3 do
     icon = {
       string = "",
       width = "dynamic",
+      font = "sketchybar-app-font:Regular:14.0",
     },
     padding_left = 4,
     padding_right = 4,
