@@ -16,7 +16,7 @@ for i = 1, 3 do
     icon = {
       string = "",
       width = "dynamic",
-      font = "sketchybar-app-font:Regular:11.0",
+      font = "sketchybar-app-font:Regular:9.0",
     },
     padding_left = 6,
     padding_right = 6,
@@ -128,8 +128,17 @@ local function update_workspaces()
               color = is_current and colors.iris or colors.grey,
             },
             background = {
-              color = is_current and colors.with_alpha(colors.surface, 0.3) or colors.transparent,
+              color = is_current and colors.with_alpha(colors.iris, 0.2) or colors.transparent,
               border_width = 0,
+              shadow = is_current and {
+                drawing = true,
+                color = colors.iris,
+                angle = 0,
+                distance = 0,
+                blur = 8,
+              } or {
+                drawing = false,
+              },
             }
           })
         end)
