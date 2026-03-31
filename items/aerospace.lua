@@ -7,6 +7,7 @@ local all_workspaces = {}
 
 -- Create 3 separate workspace widgets with individual brackets
 local workspaces = {}
+local brackets = {}
 for i = 1, 3 do
   local workspace = sbar.add("item", "aerospace.workspace." .. i, {
     label = {
@@ -23,13 +24,16 @@ for i = 1, 3 do
   })
   
   -- Individual bracket for each workspace
-  sbar.add("bracket", { "aerospace.workspace." .. i }, {
+  local bracket = sbar.add("bracket", { "aerospace.workspace." .. i }, {
     background = {
       color = colors.bg1,
       border_color = colors.grey,
       border_width = 2,
       height = 28,
       corner_radius = 8,
+      shadow = {
+        drawing = false,
+      }
     }
   })
   
@@ -41,6 +45,7 @@ for i = 1, 3 do
   end
   
   table.insert(workspaces, workspace)
+  table.insert(brackets, bracket)
 end
 
 -- Padding at the end
@@ -92,6 +97,19 @@ local function update_workspaces()
         local ws_num = display_workspaces[i]
         local is_current = ws_num == current_workspace
         
+        -- Update bracket with shadow if current
+        brackets[i]:set({
+          background = {
+            shadow = {
+              drawing = is_current,
+              color = colors.iris,
+              angle = 45,
+              distance = 2,
+              blur = 5,
+            }
+          }
+        })
+        
         sbar.exec("aerospace list-windows --workspace " .. ws_num .. " --format '%{app-name}' 2>/dev/null || true", function(apps_result)
           local apps_string = ""
           
@@ -128,17 +146,8 @@ local function update_workspaces()
               color = is_current and colors.iris or colors.grey,
             },
             background = {
-              color = is_current and colors.with_alpha(colors.iris, 0.2) or colors.transparent,
+              color = colors.transparent,
               border_width = 0,
-              shadow = is_current and {
-                drawing = true,
-                color = colors.iris,
-                angle = 0,
-                distance = 0,
-                blur = 8,
-              } or {
-                drawing = false,
-              },
             }
           })
         end)
@@ -161,6 +170,7 @@ sbar.add("item", "aerospace.monitor2", {
 
 -- Initial update with a small delay
 sbar.delay(0.1, update_workspaces)
+
 
 
 
