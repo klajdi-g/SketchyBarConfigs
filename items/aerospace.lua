@@ -2,7 +2,10 @@ local colors = require("colors")
 local app_icons = require("helpers.app_icons")
 local settings = require("settings")
 
--- Create workspace items (3 at a time)
+local current_workspace = 1
+local all_workspaces = {}
+
+-- Create 3 separate workspace widgets with individual brackets
 local workspaces = {}
 for i = 1, 3 do
   local workspace = sbar.add("item", "aerospace.workspace." .. i, {
@@ -15,29 +18,34 @@ for i = 1, 3 do
       width = "dynamic",
       font = "sketchybar-app-font:Regular:14.0",
     },
-    padding_left = 4,
-    padding_right = 4,
+    padding_left = 6,
+    padding_right = 6,
   })
+  
+  -- Individual bracket for each workspace
+  sbar.add("bracket", { "aerospace.workspace." .. i }, {
+    background = {
+      color = colors.bg1,
+      border_color = colors.grey,
+      border_width = 2,
+      height = 28,
+    }
+  })
+  
+  -- Padding between workspaces
+  if i < 3 then
+    sbar.add("item", "aerospace.space." .. i, {
+      width = 5,
+    })
+  end
+  
   table.insert(workspaces, workspace)
 end
 
--- Add bracket around all workspaces
-sbar.add("bracket", { "/aerospace\\.workspace\\..*/" }, {
-  background = {
-    color = colors.bg1,
-    border_color = colors.grey,
-    border_width = 2,
-    height = 28,
-  }
-})
-
--- Add padding
+-- Padding at the end
 sbar.add("item", "aerospace.padding", {
   width = 5,
 })
-
-local current_workspace = 1
-local all_workspaces = {}
 
 -- Update workspace display
 local function update_workspaces()
@@ -87,13 +95,16 @@ local function update_workspaces()
             local seen = {}
             local count = 0
             for app in string.gmatch(apps_result, '[^\r\n]+') do
-              if app ~= "" and not seen[app] and count < 3 then
+              if app ~= "" and not seen[app] and count < 4 then
                 local icon = app_icons[app] or app_icons["Default"] or "•"
                 apps_string = apps_string .. icon
                 seen[app] = true
                 count = count + 1
               end
             end
+          else
+            -- Empty workspace, show a dash or nothing
+            apps_string = ""
           end
           
           workspaces[i]:set({
@@ -136,6 +147,7 @@ sbar.add("item", "aerospace.monitor2", {
 
 -- Initial update with a small delay
 sbar.delay(0.1, update_workspaces)
+
 
 
 
